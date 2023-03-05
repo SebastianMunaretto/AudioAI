@@ -1,5 +1,7 @@
-import { Component, OnInit} from '@angular/core';
+import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
 
 
@@ -10,9 +12,19 @@ import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recor
 })
 export class HomeComponent {
 
-  constructor(public dialog: MatDialog) { }
+  constructor(public dialog: MatDialog, private router: Router) {
 
-  ngOnInit(): void {}
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        this.router.navigate(['/login']);
+      }
+    });
+
+  }
+
+  ngOnInit(): void {
+  }
 
   openDialog() {
     const dialogRef = this.dialog.open(AudioRecorderPopupComponent, {
