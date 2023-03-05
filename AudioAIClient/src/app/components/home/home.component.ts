@@ -14,13 +14,16 @@ export class HomeComponent {
 
   constructor(public dialog: MatDialog, private router: Router) {
 
-    const auth = getAuth();
-    onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        this.router.navigate(['/login']);
-      }
-    });
-
+    try {
+      const auth = getAuth();
+      onAuthStateChanged(auth, (user) => {
+        if (!user) {
+          this.router.navigate(['/login']);
+        }
+      });
+    } catch {
+      this.router.navigate(['/login']);
+    }
   }
 
   ngOnInit(): void {

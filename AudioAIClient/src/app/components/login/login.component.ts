@@ -38,5 +38,9 @@ export class LoginComponent {
     }
   }
 
+  redirectToRegisterPage(){
+    this.router.navigate(['/register']);
+  }
+
 
 }

@@ -24,6 +24,9 @@
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit" [disabled]="registerForm.invalid">Register</button>
+    <button mat-raised-button color="primary" (click)="redirectToLoginPage()">Login Page</button>
+
+
   </form>
 
   <button (click)="signInWithGoogle()">Sign in with Google</button>

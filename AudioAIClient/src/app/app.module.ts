@@ -1,3 +1,4 @@
+import { DatabaseConnectionService } from './services/database-connection.service';
 import { OpenAiConnectionService } from 'src/app/services/open-ai-connection.service';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
@@ -58,7 +59,7 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ],
-  providers: [OpenAiConnectionService],
+  providers: [OpenAiConnectionService, DatabaseConnectionService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
