@@ -8,7 +8,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 export class OpenAiConnectionService {
 
 
-  private apiUrl = 'https://api.openai.com/v1/audio/transcriptions';
+  private transcriptionApiUrl = 'https://api.openai.com/v1/audio/transcriptions';
+  private titleGenerationApiUrl = 'https://api.openai.com/v1/chat/completions';
+
 
   constructor(private http: HttpClient) { }
 
@@ -22,6 +24,20 @@ export class OpenAiConnectionService {
     const headers = new HttpHeaders()
       .set('Authorization', `Bearer ${environment.openAiApiKey}`);
 
-    return this.http.post(this.apiUrl, formData, { headers });
+    return this.http.post(this.transcriptionApiUrl, formData, { headers });
+  }
+
+  generateTranscriptionTitle(transcription:any) {
+
+
+    const body = {
+      model: "gpt-3.5-turbo",
+      messages: [{ "content": `Create a title out of the following text: ${transcription!.text}`, "role": "user" }],
+    };
+
+    const headers = new HttpHeaders()
+      .set('Authorization', `Bearer ${environment.openAiApiKey}`).set('Content-Type', 'application/json');
+
+    return this.http.post(this.titleGenerationApiUrl, body, { headers });
   }
 }
