@@ -14,7 +14,6 @@ export class DatabaseConnectionService {
   async fetchDocuments() {
     const db = getFirestore(getApp());
     const userId = getAuth().currentUser?.uid;
-
     const documentsRef = collection(db, `users/${userId}/documents`);
     const documentsSnapshot = await getDocs(documentsRef);
 
@@ -32,8 +31,6 @@ export class DatabaseConnectionService {
 
   async saveAudioIntoDB(transcription: string, title: string, audio: Blob) {
     const db = getFirestore(getApp());
-
-    // Assuming you have a Firebase user object
     const userId = getAuth().currentUser?.uid;
 
     // Convert the audio blob to a base64 string

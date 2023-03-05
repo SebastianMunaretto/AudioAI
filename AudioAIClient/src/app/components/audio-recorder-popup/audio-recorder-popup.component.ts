@@ -10,13 +10,14 @@ import { OpenAiConnectionService } from 'src/app/services/open-ai-connection.ser
 })
 export class AudioRecorderPopupComponent {
 
-  @Output() recordCompleted = new EventEmitter<Blob | null>();
-
   private mediaRecorder: MediaRecorder | null = null;
   private recordedChunks: Blob[] = [];
 
   constructor(private openaiService: OpenAiConnectionService, private databaseService: DatabaseConnectionService) { }
 
+  /*
+    saves audio into media recorder
+  */
   startRecording() {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(stream => {
@@ -29,16 +30,12 @@ export class AudioRecorderPopupComponent {
   stopRecording() {
     this.mediaRecorder!.stop();
     this.mediaRecorder!.removeEventListener('dataavailable', this.onDataAvailable.bind(this));
-    const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-    const url = window.URL.createObjectURL(blob);
-    const audio = new Audio(url);
+    const audio = this.createAudioOutOfChunks();
     audio.play();
   }
 
   playRecording() {
-    const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
-    const url = window.URL.createObjectURL(blob);
-    const audio = new Audio(url);
+    const audio = this.createAudioOutOfChunks();
     audio.play();
   }
 
@@ -46,19 +43,25 @@ export class AudioRecorderPopupComponent {
     this.recordedChunks.push(event.data);
   }
 
-  close() {
-    this.recordCompleted.emit(null);
+  private createAudioOutOfChunks() {
+    const blob = new Blob(this.recordedChunks, { type: 'audio/webm' });
+    const url = window.URL.createObjectURL(blob);
+    return new Audio(url);
   }
 
+  /*
+   After audio was recorded services are called and data gets saved into database
+  */
   async transcribeAudio() {
     try {
+      // Service call that work with openai api
       //const transcription = await this.openaiService.transcribeAudio(new Blob(this.recordedChunks, { type: 'audio/webm' })).toPromise();
       //const title: any = await this.openaiService.generateTranscriptionTitle(transcription).toPromise();
-      // console.log();
-      // console.log(title!.choices[0].message.content)
-      const transcription = {text: "This is a dummysdasdasdas text to test the insertion of the text and audio into the firebase databse"};
+      /* The title response string can be found in transcription.text*/
+      /* The title response string can be found in title!.choices[0].message.content*/
+      const transcription = { text: "This is a dummysdasdasdas text to test the insertion of the text and audio into the firebase databse" };
       const title = "Dummy titleasdasdsd";
-      await this.databaseService.saveAudioIntoDB(transcription.text,title,new Blob(this.recordedChunks, { type: 'audio/webm' }));
+      await this.databaseService.saveAudioIntoDB(transcription.text, title, new Blob(this.recordedChunks, { type: 'audio/webm' }));
       await this.databaseService.fetchDocuments();
 
     } catch (error) {

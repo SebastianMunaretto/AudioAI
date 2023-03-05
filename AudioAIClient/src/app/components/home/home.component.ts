@@ -1,7 +1,6 @@
-import { Router } from '@angular/router';
+import { UserManagementService } from './../../services/user-management.service';
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { MatDialog } from '@angular/material/dialog';
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
 
 
@@ -12,24 +11,16 @@ import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recor
 })
 export class HomeComponent {
 
-  constructor(public dialog: MatDialog, private router: Router) {
-
-    try {
-      const auth = getAuth();
-      onAuthStateChanged(auth, (user) => {
-        if (!user) {
-          this.router.navigate(['/login']);
-        }
-      });
-    } catch {
-      this.router.navigate(['/login']);
-    }
+  constructor(public dialog: MatDialog,private userManagement: UserManagementService) {
+    // Redirects to login if not logged in
+    userManagement.blockComponentIfNotLoggedIn();
   }
 
   ngOnInit(): void {
   }
 
   openDialog() {
+
     const dialogRef = this.dialog.open(AudioRecorderPopupComponent, {
       maxWidth: '90vw',
       maxHeight: '90vh',
@@ -41,6 +32,7 @@ export class HomeComponent {
     dialogRef.afterClosed().subscribe(() => {
       console.log('Dialog closed');
     });
+
   }
 
 }

@@ -16,7 +16,7 @@ export class OpenAiConnectionService {
 
   transcribeAudio(audioBlob: Blob) {
 
-
+    // Creates the body for the request
     const formData = new FormData();
     formData.append('file', audioBlob, 'audio.mp3');
     formData.append('model', 'whisper-1');
@@ -27,11 +27,11 @@ export class OpenAiConnectionService {
     return this.http.post(this.transcriptionApiUrl, formData, { headers });
   }
 
-  generateTranscriptionTitle(transcription:any) {
-
+  generateTranscriptionTitle(transcription: any) {
 
     const body = {
       model: "gpt-3.5-turbo",
+      // Inserts the prompt below TODO make the prompt slightly modifiable with mood, length, etc.
       messages: [{ "content": `Create a title out of the following text: ${transcription!.text}`, "role": "user" }],
     };
 

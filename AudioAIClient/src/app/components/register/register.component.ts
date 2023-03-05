@@ -1,3 +1,4 @@
+import { UserManagementService } from './../../services/user-management.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -11,36 +12,25 @@ import { Auth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPasswo
 })
 export class RegisterComponent {
 
+  constructor(private auth: Auth, private router: Router, private userManagement: UserManagementService) { }
+
   registerForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
     password: new FormControl('', [Validators.required, Validators.minLength(6)])
   });
 
-  constructor(private auth: Auth, private router: Router) { }
-
-  async registerWithEmail() {
-    const { email, password } = this.registerForm.value;
-    try {
-      const credential = await createUserWithEmailAndPassword(this.auth, email!, password!);
-      this.router.navigate(['/']);
-    } catch (error) {
-      console.log(error);
-    }
+  async emailRegister() {
+    const formData: { email: string | null | undefined, password: string | null | undefined } = { email: this.registerForm.value.email, password: this.registerForm.value.password }
+    this.userManagement.registerWithEmail(formData);
   }
 
-  async signInWithGoogle() {
-    try {
-      const provider = new GoogleAuthProvider();
-      const credential = await signInWithPopup(this.auth, provider);
-      this.router.navigate(['/']);
-    } catch (error) {
-      console.log(error);
-    }
+  async googleRegister() {
+    this.userManagement.loginOrRegisterWithGoogle();
   }
 
-  redirectToLoginPage(){
+  // switches to login page
+  redirectToLoginPage() {
     this.router.navigate(['/login']);
   }
-
 
 }
