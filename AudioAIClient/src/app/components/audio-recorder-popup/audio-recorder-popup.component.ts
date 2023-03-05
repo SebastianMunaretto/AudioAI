@@ -55,15 +55,10 @@ export class AudioRecorderPopupComponent {
   async transcribeAudio() {
     try {
       // Service call that work with openai api
-      //const transcription = await this.openaiService.transcribeAudio(new Blob(this.recordedChunks, { type: 'audio/webm' })).toPromise();
-      //const title: any = await this.openaiService.generateTranscriptionTitle(transcription).toPromise();
-      /* The title response string can be found in transcription.text*/
-      /* The title response string can be found in title!.choices[0].message.content*/
-      const transcription = { text: "This is a dummysdasdasdas text to test the insertion of the text and audio into the firebase databse" };
-      const title = "Dummy titleasdasdsd";
-      await this.databaseService.saveAudioIntoDB(transcription.text, title, new Blob(this.recordedChunks, { type: 'audio/webm' }));
-      await this.databaseService.fetchDocuments();
-
+      const transcription: any = await this.openaiService.transcribeAudio(new Blob(this.recordedChunks, { type: 'audio/webm' })).toPromise();
+      const title: any = await this.openaiService.generateTranscriptionTitle(transcription).toPromise();
+      await this.databaseService.saveAudioIntoDB(transcription!.text,title!.choices[0].message.content, new Blob(this.recordedChunks, { type: 'audio/webm' }));
+      console.log(transcription,title);
     } catch (error) {
       console.log(error);
     }
