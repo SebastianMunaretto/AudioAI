@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import {Auth, sendPasswordResetEmail, signOut, createUserWithEmailAndPassword} from '@angular/fire/auth';
+import { Auth, sendPasswordResetEmail, signInWithPopup, GoogleAuthProvider, signOut, createUserWithEmailAndPassword } from '@angular/fire/auth';
+
 
 @Component({
   selector: 'app-register',
@@ -20,7 +21,17 @@ export class RegisterComponent {
   async registerWithEmail() {
     const { email, password } = this.registerForm.value;
     try {
-      const credential = await createUserWithEmailAndPassword(this.auth , email!, password!);
+      const credential = await createUserWithEmailAndPassword(this.auth, email!, password!);
+      this.router.navigate(['/']);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async signInWithGoogle() {
+    try {
+      const provider = new GoogleAuthProvider();
+      const credential = await signInWithPopup(this.auth, provider);
       this.router.navigate(['/']);
     } catch (error) {
       console.log(error);
