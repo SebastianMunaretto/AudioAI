@@ -12,6 +12,8 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 })
 export class HomeComponent {
 
+  loading: boolean = false;
+
   constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private sanitizer: DomSanitizer) {
     // Redirects to login if not logged in
     userManagement.blockComponentIfNotLoggedIn();
@@ -20,8 +22,10 @@ export class HomeComponent {
   documents: { title: string, transcription: string, audio: string }[] = [];
 
   ngOnInit(): void {
+    this.loading = true;
     this.databaseConnection.fetchDocuments().then(documents => {
       this.documents = documents;
+      this.loading = false;
     });
 
   }
@@ -61,8 +65,10 @@ export class HomeComponent {
     });
 
     dialogRef.afterClosed().subscribe(() => {
+      this.loading = true;
       this.databaseConnection.fetchDocuments().then(documents => {
         this.documents = documents;
+        this.loading = false;
       });
     });
 
