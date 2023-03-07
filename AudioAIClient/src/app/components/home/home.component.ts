@@ -5,16 +5,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
-
-
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-
-
 
   constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private sanitizer: DomSanitizer) {
     // Redirects to login if not logged in
@@ -27,8 +23,8 @@ export class HomeComponent {
     this.databaseConnection.fetchDocuments().then(documents => {
       this.documents = documents;
     });
-  }
 
+  }
 
   /* Turns base64 into binary by removing headers, than converts it into blob and finally into Audio playing it */
   playAudio(base64Audio: any) {
@@ -65,7 +61,9 @@ export class HomeComponent {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      console.log('Dialog closed');
+      this.databaseConnection.fetchDocuments().then(documents => {
+        this.documents = documents;
+      });
     });
 
   }

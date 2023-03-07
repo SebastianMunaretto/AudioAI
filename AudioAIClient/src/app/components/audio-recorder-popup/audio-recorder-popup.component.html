@@ -1,4 +1,9 @@
-<button mat-raised-button color="primary" (click)="startRecording()">Start Recording</button>
-<button mat-raised-button color="warn" (click)="stopRecording()">Stop Recording</button>
-<button (click)="playRecording()">Play recording</button>
-<button mat-raised-button color="primary" (click)="transcribeAudio()">Save</button>
+<div *ngIf="!loading; else elseBlock">
+  <button mat-raised-button color="primary" (click)="startRecording()">Start Recording</button>
+  <button mat-raised-button color="warn" (click)="stopRecording()">Stop Recording</button>
+  <button (click)="playRecording()">Play recording</button>
+  <button mat-raised-button color="primary" (click)="transcribeAudio()">Save</button>
+</div>
+
+
+<ng-template #elseBlock><mat-spinner></mat-spinner></ng-template>

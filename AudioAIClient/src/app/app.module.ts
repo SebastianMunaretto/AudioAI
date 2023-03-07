@@ -28,6 +28,8 @@ import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
 import { provideAuth,getAuth } from '@angular/fire/auth';
 import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 import {MatCardModule} from '@angular/material/card';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 
 
 @NgModule({
@@ -48,6 +50,7 @@ import {MatCardModule} from '@angular/material/card';
     MatInputModule,
     MatCardModule,
     LayoutModule,
+    MatProgressSpinnerModule,
     MatFormFieldModule,
     HttpClientModule,
     MatToolbarModule,
