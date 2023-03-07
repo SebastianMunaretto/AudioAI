@@ -19,15 +19,10 @@ export class HomeComponent {
     userManagement.blockComponentIfNotLoggedIn();
   }
 
-  documents: { title: string, transcription: string, audio: string }[] = [];
+  documents: { id: string, title: string, transcription: string, audio: string }[] = [];
 
   ngOnInit(): void {
-    this.loading = true;
-    this.databaseConnection.fetchDocuments().then(documents => {
-      this.documents = documents;
-      this.loading = false;
-    });
-
+    this.fetchItems();
   }
 
   /* Turns base64 into binary by removing headers, than converts it into blob and finally into Audio playing it */
@@ -65,13 +60,23 @@ export class HomeComponent {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.loading = true;
-      this.databaseConnection.fetchDocuments().then(documents => {
-        this.documents = documents;
-        this.loading = false;
-      });
+      this.fetchItems();
     });
 
+  }
+
+  deleteItem(id: string) {
+    this.databaseConnection.deleteItemFromDB(id);
+    this.fetchItems();
+  }
+
+
+  fetchItems() {
+    this.loading = true;
+    this.databaseConnection.fetchDocuments().then(documents => {
+      this.documents = documents;
+      this.loading = false;
+    });
   }
 
 }

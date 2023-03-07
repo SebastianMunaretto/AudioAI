@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { getApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
-import { doc, setDoc, collection, getFirestore, addDoc, getDocs } from "firebase/firestore";
+import { doc, setDoc, collection, getFirestore, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 
 
 @Injectable({
@@ -46,6 +46,20 @@ export class DatabaseConnectionService {
       // Save the audio data to Firestore
       await addDoc(collection(db, `users/${userId}/documents`), audioData);
     };
+  }
+
+  async deleteItemFromDB(id: string) {
+    const db = getFirestore(getApp());
+    const userId = getAuth().currentUser?.uid;
+
+    const docRef = doc(db, `users/${userId}/documents/${id}`);
+
+    try {
+      await deleteDoc(docRef);
+      console.log(`Document with ID ${id} deleted successfully.`);
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
   }
 
 
