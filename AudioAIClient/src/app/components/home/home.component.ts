@@ -4,6 +4,7 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-home',
@@ -14,7 +15,7 @@ export class HomeComponent {
 
   loading: boolean = false;
 
-  constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private sanitizer: DomSanitizer) {
+  constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private _snackBar: MatSnackBar) {
     // Redirects to login if not logged in
     userManagement.blockComponentIfNotLoggedIn();
   }
@@ -66,8 +67,11 @@ export class HomeComponent {
   }
 
   deleteItem(id: string) {
-    this.databaseConnection.deleteItemFromDB(id);
-    this.fetchItems();
+    this.databaseConnection.deleteItemFromDB(id).then(data => {
+      this.fetchItems();
+      this.openSnackBar("Item deleted successfully!")
+    });
+
   }
 
 
@@ -76,6 +80,12 @@ export class HomeComponent {
     this.databaseConnection.fetchDocuments().then(documents => {
       this.documents = documents;
       this.loading = false;
+    });
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, "", {
+      duration: 2000
     });
   }
 

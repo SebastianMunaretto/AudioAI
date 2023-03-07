@@ -25,7 +25,6 @@ export class DatabaseConnectionService {
       });
     });
 
-    console.log(documents);
     return documents;
   }
 
@@ -51,7 +50,6 @@ export class DatabaseConnectionService {
   async deleteItemFromDB(id: string) {
     const db = getFirestore(getApp());
     const userId = getAuth().currentUser?.uid;
-
     const docRef = doc(db, `users/${userId}/documents/${id}`);
 
     try {

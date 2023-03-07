@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from '@angular/fire/auth';
+import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
+import { DomSanitizer } from '@angular/platform-browser';
 
 
 @Component({
@@ -12,7 +14,8 @@ import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider }
 })
 export class LoginComponent {
 
-  constructor(private auth: Auth, private router: Router, private userManagement: UserManagementService) { }
+  constructor(private auth: Auth, private router: Router, private userManagement: UserManagementService) {
+  }
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),

@@ -22,14 +22,17 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { RegisterComponent } from './components/register/register.component';
+import { SignupComponent } from './components/signup/signup.component';
 import { environment } from '../environments/environment';
-import { initializeApp,provideFirebaseApp } from '@angular/fire/app';
-import { provideAuth,getAuth } from '@angular/fire/auth';
-import { provideFirestore,getFirestore } from '@angular/fire/firestore';
-import {MatCardModule} from '@angular/material/card';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { provideAuth, getAuth } from '@angular/fire/auth';
+import { provideFirestore, getFirestore } from '@angular/fire/firestore';
+import { MatCardModule } from '@angular/material/card';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+
 
 
 
@@ -39,7 +42,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     NavigationContainerComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent,
+    SignupComponent,
     SettingsComponent,
     AudioRecorderPopupComponent
   ],
@@ -49,6 +52,7 @@ import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
     BrowserAnimationsModule,
     ReactiveFormsModule,
     MatInputModule,
+    MatSnackBarModule,
     MatCardModule,
     LayoutModule,
     MatProgressSpinnerModule,

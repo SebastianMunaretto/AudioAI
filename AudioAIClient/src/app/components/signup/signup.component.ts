@@ -1,4 +1,4 @@
-import { UserManagementService } from './../../services/user-management.service';
+import { UserManagementService } from '../../services/user-management.service';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -6,11 +6,11 @@ import { Auth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPasswo
 
 
 @Component({
-  selector: 'app-register',
-  templateUrl: './register.component.html',
-  styleUrls: ['./register.component.scss']
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrls: ['./signup.component.scss']
 })
-export class RegisterComponent {
+export class SignupComponent {
 
   constructor(private auth: Auth, private router: Router, private userManagement: UserManagementService) { }
 

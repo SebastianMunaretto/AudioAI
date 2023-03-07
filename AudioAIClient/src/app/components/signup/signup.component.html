@@ -1,5 +1,6 @@
-<div class="container">
-  <h2>Create an account</h2>
+<section class="mainSignupSection">
+  <h1>Signup</h1>
+  <h2>Join Recordai now! Please sign up</h2>
   <form [formGroup]="registerForm" (ngSubmit)="emailRegister()">
     <mat-form-field>
       <input matInput type="email" formControlName="email" placeholder="Email" required>
@@ -33,6 +34,6 @@
 
   </form>
 
-  <button (click)="googleRegister()">Sign in with Google</button>
+  <p>Already a member? <a routerLink="/login">Login</a></p>
 
-</div>
+</section>
