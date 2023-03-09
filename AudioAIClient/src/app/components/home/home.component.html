@@ -1,5 +1,5 @@
 <div *ngIf="!loading; else elseBlock" >
-  <mat-card *ngFor="let document of documents">
+  <mat-card *ngFor="let document of documents" color="primary">
     <mat-card-header>
       <mat-card-title>{{ document!.title }}</mat-card-title>
     </mat-card-header>
