@@ -1,3 +1,4 @@
+import { UserManagementService } from './services/user-management.service';
 import { DatabaseConnectionService } from './services/database-connection.service';
 import { OpenAiConnectionService } from 'src/app/services/open-ai-connection.service';
 import { NgModule } from '@angular/core';
@@ -70,7 +71,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     provideAuth(() => getAuth()),
     provideFirestore(() => getFirestore())
   ],
-  providers: [OpenAiConnectionService, DatabaseConnectionService],
+  providers: [OpenAiConnectionService, DatabaseConnectionService, UserManagementService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

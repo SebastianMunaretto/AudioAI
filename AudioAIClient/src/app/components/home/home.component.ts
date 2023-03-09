@@ -1,28 +1,33 @@
+import { onAuthStateChanged } from 'firebase/auth';
+import { getAuth } from 'firebase/auth';
+import { getApp } from 'firebase/app';
+import { getFirestore } from 'firebase/firestore';
 import { DatabaseConnectionService } from './../../services/database-connection.service';
 import { UserManagementService } from './../../services/user-management.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
   loading: boolean = false;
 
   constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private _snackBar: MatSnackBar) {
-    // Redirects to login if not logged in
-    userManagement.blockComponentIfNotLoggedIn();
+
   }
 
   documents: { id: string, title: string, transcription: string, audio: string }[] = [];
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.userManagement.blockComponentIfNotLoggedIn();
     this.fetchItems();
   }
 
@@ -39,7 +44,6 @@ export class HomeComponent {
     for (let i = 0; i < rawLength; i++) {
       arr[i] = raw.charCodeAt(i);
     }
-
 
     let binary = arr;
     let blob = new Blob([binary], {
@@ -76,10 +80,13 @@ export class HomeComponent {
 
 
   fetchItems() {
-    this.loading = true;
-    this.databaseConnection.fetchDocuments().then(documents => {
-      this.documents = documents;
-      this.loading = false;
+    onAuthStateChanged(getAuth(), (user) => {
+      this.loading = true;
+      this.databaseConnection.fetchDocuments().then(documents => {
+        console.log(documents)
+        this.documents = documents;
+        this.loading = false;
+      });
     });
   }
 

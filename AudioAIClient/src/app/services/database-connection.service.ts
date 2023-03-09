@@ -1,3 +1,4 @@
+import { FirebaseApp } from '@angular/fire/app';
 import { Injectable } from '@angular/core';
 import { getApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
@@ -9,7 +10,7 @@ import { doc, setDoc, collection, getFirestore, addDoc, getDocs, deleteDoc } fro
 })
 export class DatabaseConnectionService {
 
-  constructor() { }
+  constructor(private app: FirebaseApp) { }
 
   async fetchDocuments() {
     const db = getFirestore(getApp());
@@ -30,7 +31,7 @@ export class DatabaseConnectionService {
 
   async saveAudioIntoDB(transcription: string, title: string, audio: Blob) {
     const db = getFirestore(getApp());
-    const userId = getAuth().currentUser?.uid;
+    const userId = getAuth(this.app).currentUser?.uid;
 
     // Convert the audio blob to a base64 string
     const reader = new FileReader();
@@ -49,7 +50,7 @@ export class DatabaseConnectionService {
 
   async deleteItemFromDB(id: string) {
     const db = getFirestore(getApp());
-    const userId = getAuth().currentUser?.uid;
+    const userId = getAuth(this.app).currentUser?.uid;
     const docRef = doc(db, `users/${userId}/documents/${id}`);
 
     try {
