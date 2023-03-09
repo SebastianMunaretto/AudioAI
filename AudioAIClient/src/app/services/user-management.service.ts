@@ -5,9 +5,6 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Auth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword } from '@angular/fire/auth';
 
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })

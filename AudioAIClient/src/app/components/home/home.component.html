@@ -1,5 +1,4 @@
-<div *ngIf="!loading; else elseBlock">
-
+<div *ngIf="!loading; else elseBlock" >
   <mat-card *ngFor="let document of documents">
     <mat-card-header>
       <mat-card-title>{{ document!.title }}</mat-card-title>

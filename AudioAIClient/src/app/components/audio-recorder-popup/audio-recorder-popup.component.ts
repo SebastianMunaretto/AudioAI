@@ -1,7 +1,8 @@
 import { DatabaseConnectionService } from './../../services/database-connection.service';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, Inject } from '@angular/core';
 import { OpenAiConnectionService } from 'src/app/services/open-ai-connection.service';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+
 
 
 @Component({
@@ -15,7 +16,7 @@ export class AudioRecorderPopupComponent {
   private recordedChunks: Blob[] = [];
   loading: boolean = false;
 
-  constructor(private openaiService: OpenAiConnectionService, private databaseService: DatabaseConnectionService, public dialogRef: MatDialogRef<AudioRecorderPopupComponent>,) { }
+  constructor(private openaiService: OpenAiConnectionService, private databaseService: DatabaseConnectionService, public dialogRef: MatDialogRef<AudioRecorderPopupComponent>, @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   /*
     saves audio into media recorder
@@ -60,7 +61,7 @@ export class AudioRecorderPopupComponent {
       // Service call that work with openai api
       const transcription: any = await this.openaiService.transcribeAudio(new Blob(this.recordedChunks, { type: 'audio/webm' })).toPromise();
       const title: any = await this.openaiService.generateTranscriptionTitle(transcription).toPromise();
-      await this.databaseService.saveAudioIntoDB(transcription!.text,title!.choices[0].message.content, new Blob(this.recordedChunks, { type: 'audio/webm' }));
+      await this.databaseService.saveAudioIntoDB(transcription!.text, title!.choices[0].message.content, new Blob(this.recordedChunks, { type: 'audio/webm' }), this.data.collectionName);
       this.loading = false;
       this.dialogRef.close();
     } catch (error) {

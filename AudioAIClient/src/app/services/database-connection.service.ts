@@ -4,7 +4,6 @@ import { getApp } from "firebase/app";
 import { getAuth } from 'firebase/auth';
 import { doc, setDoc, collection, getFirestore, addDoc, getDocs, deleteDoc } from "firebase/firestore";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -12,10 +11,10 @@ export class DatabaseConnectionService {
 
   constructor(private app: FirebaseApp) { }
 
-  async fetchDocuments() {
+  async fetchDocuments(collectionName: string | null) {
     const db = getFirestore(getApp());
     const userId = getAuth().currentUser?.uid;
-    const documentsRef = collection(db, `users/${userId}/documents`);
+    const documentsRef = collection(db, `users/${userId}/${collectionName}`);
     const documentsSnapshot = await getDocs(documentsRef);
 
     const documents: any = [];
@@ -29,7 +28,7 @@ export class DatabaseConnectionService {
     return documents;
   }
 
-  async saveAudioIntoDB(transcription: string, title: string, audio: Blob) {
+  async saveAudioIntoDB(transcription: string, title: string, audio: Blob, collectionName: string | null) {
     const db = getFirestore(getApp());
     const userId = getAuth(this.app).currentUser?.uid;
 
@@ -44,14 +43,14 @@ export class DatabaseConnectionService {
       };
 
       // Save the audio data to Firestore
-      await addDoc(collection(db, `users/${userId}/documents`), audioData);
+      await addDoc(collection(db, `users/${userId}/${collectionName}`), audioData);
     };
   }
 
-  async deleteItemFromDB(id: string) {
+  async deleteItemFromDB(id: string, collectionName: string | null) {
     const db = getFirestore(getApp());
     const userId = getAuth(this.app).currentUser?.uid;
-    const docRef = doc(db, `users/${userId}/documents/${id}`);
+    const docRef = doc(db, `users/${userId}/${collectionName}/${id}`);
 
     try {
       await deleteDoc(docRef);
@@ -59,6 +58,11 @@ export class DatabaseConnectionService {
     } catch (error) {
       console.error("Error deleting document: ", error);
     }
+  }
+
+  // Fetches all the collections the user has so he can route to them
+  async fetchUserCollectionNames(){
+
   }
 
 

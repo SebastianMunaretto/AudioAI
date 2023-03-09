@@ -1,4 +1,4 @@
-<mat-sidenav-container class="sidenav-container">
+<mat-sidenav-container class="sidenav-container" [ngClass]="theme">
   <mat-sidenav #drawer class="sidenav" fixedInViewport [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
     [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>Menu</mat-toolbar>
@@ -21,8 +21,11 @@
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
       <span>AudioAIClient</span>
+      <div (click)="toggleTheme()" class="toggleThemeIcon">
+        <mat-icon class="settings-icon">brightness_3</mat-icon>
+      </div>
     </mat-toolbar>
     <!-- ROUTER OUTLET CHANGING COMPONENT CONTAINER-->
-    <router-outlet></router-outlet>
+    <router-outlet [ngClass]="theme"></router-outlet>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,13 +1,13 @@
+import { MiscService } from './../../services/misc.service';
 import { onAuthStateChanged } from 'firebase/auth';
 import { getAuth } from 'firebase/auth';
-import { getApp } from 'firebase/app';
-import { getFirestore } from 'firebase/firestore';
 import { DatabaseConnectionService } from './../../services/database-connection.service';
 import { UserManagementService } from './../../services/user-management.service';
 import { Component, OnInit, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AudioRecorderPopupComponent } from '../audio-recorder-popup/audio-recorder-popup.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ActivatedRoute } from '@angular/router';
 
 
 
@@ -19,16 +19,22 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class HomeComponent implements OnInit {
 
   loading: boolean = false;
+  collectionName!: string | null;
+  theme: string | null;
 
-  constructor(public dialog: MatDialog, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private _snackBar: MatSnackBar) {
-
+  constructor(public dialog: MatDialog, private miscService: MiscService, private actRoute: ActivatedRoute, private userManagement: UserManagementService, private databaseConnection: DatabaseConnectionService, private _snackBar: MatSnackBar) {
+    this.theme = miscService.getThemeColor();
   }
 
   documents: { id: string, title: string, transcription: string, audio: string }[] = [];
 
   ngOnInit() {
     this.userManagement.blockComponentIfNotLoggedIn();
-    this.fetchItems();
+    // By subscribing the value gets updated not only once but also when the component is not reloaded and the url is changed
+    this.actRoute.params.subscribe(params => {
+      this.collectionName = params['collectionName'];
+      this.fetchItems(this.collectionName);
+    });
   }
 
   /* Turns base64 into binary by removing headers, than converts it into blob and finally into Audio playing it */
@@ -61,29 +67,30 @@ export class HomeComponent implements OnInit {
       maxHeight: '90vh',
       width: '600px',
       height: '500px',
-      panelClass: 'popup-dialog'
+      panelClass: 'popup-dialog',
+      data: {collectionName: this.collectionName}
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      this.fetchItems();
+      this.fetchItems(this.collectionName);
     });
 
   }
 
   deleteItem(id: string) {
-    this.databaseConnection.deleteItemFromDB(id).then(data => {
-      this.fetchItems();
+    this.databaseConnection.deleteItemFromDB(id,this.collectionName).then(data => {
+      this.fetchItems(this.collectionName);
       this.openSnackBar("Item deleted successfully!")
     });
 
   }
 
 
-  fetchItems() {
+  fetchItems(collectionName: string | null) {
+    // needed else user gets not loaded fast enough
     onAuthStateChanged(getAuth(), (user) => {
       this.loading = true;
-      this.databaseConnection.fetchDocuments().then(documents => {
-        console.log(documents)
+      this.databaseConnection.fetchDocuments(this.collectionName).then(documents => {
         this.documents = documents;
         this.loading = false;
       });
